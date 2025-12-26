@@ -1,0 +1,24 @@
+{
+	"name": "fmbe-visual-editor",
+	"private": true,
+	"version": "1.0.0",
+	"description": "A visual real-time editor for FMBE.",
+	"type": "commonjs",
+	"packageManager": "pnpm@9.0.0",
+	"scripts": {
+		"build": "node scripts/esbuild.cjs",
+		"check": "tsc -p src/tsconfig.json --noEmit",
+		"clean": "node scripts/clean.cjs",
+		"watch": "node scripts/esbuild.cjs --watch"
+	},
+	"author": "SkaraDev63425742",
+	"license": "UNLICENSED",
+	"contributors": [
+		"xskutsu <xsku@protonmail.com>"
+	],
+	"devDependencies": {
+		"esbuild": "^0.27.2",
+		"surge": "^0.24.6",
+		"typescript": "^5.9.3"
+	}
+}
