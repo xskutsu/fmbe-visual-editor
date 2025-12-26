@@ -4,7 +4,7 @@ const isWatch = process.argv.includes("--watch");
 const isRun = process.argv.includes("--run");
 const banner = `
 // 2025 (C) All Rights Reserved.
-// https://github.com/xskutsu/fmbe-visual-editor
+// https://github.com/xskutsu/fmbeve
 `.trim();
 
 async function build(config) {

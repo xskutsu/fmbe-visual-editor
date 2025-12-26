@@ -1,8 +1,8 @@
 {
-	"name": "fmbe-visual-editor",
+	"name": "fmbeve",
 	"private": true,
 	"version": "1.0.0",
-	"description": "A visual real-time editor for FMBE.",
+	"description": "A visual real-time editor for the FMBE technique.",
 	"type": "commonjs",
 	"packageManager": "pnpm@9.0.0",
 	"scripts": {
