@@ -1,0 +1,19 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+	<g stroke="#DDDDDD" stroke-width="15" stroke-linecap="round">
+		<line x1="16" y1="384" x2="256" y2="264" />
+		<line x1="96" y1="424" x2="336" y2="304" />
+		<line x1="176" y1="464" x2="416" y2="344" />
+		<line x1="256" y1="504" x2="496" y2="384" />
+		<line x1="16" y1="384" x2="256" y2="504" />
+		<line x1="96" y1="344" x2="336" y2="464" />
+		<line x1="176" y1="304" x2="416" y2="424" />
+		<line x1="256" y1="264" x2="496" y2="384" />
+	</g>
+	<line x1="256" y1="384" x2="256" y2="182.15" stroke="#EEEEEE" stroke-width="15" stroke-linecap="round"
+		stroke-dasharray="25, 29" />
+	<g>
+		<path d="M256 0 L342 43 L256 86 L170 43 Z" fill="#F6B316" />
+		<path d="M170 43 L256 86 L256 182.15 L170 139.15 Z" fill="#C68F12" />
+		<path d="M256 86 L342 43 L342 139.15 L256 182.15 Z" fill="#85610B" />
+	</g>
+</svg>
