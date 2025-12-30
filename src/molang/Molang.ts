@@ -20,24 +20,24 @@ export default class Molang {
 		this._tokenPosition = 0;
 		this._currentTokenValue = "";
 		if (this._length === 0) {
-			return this.createError(MolangErrorType.UnexpectedEOF, "Empty script");
+			return this._createError(MolangErrorType.UnexpectedEOF, "Empty script");
 		}
-		const initialTokenError: MolangExecFail | null = this.nextToken();
+		const initialTokenError: MolangExecFail | null = this._nextToken();
 		if (initialTokenError) {
-			return this.cleanup(initialTokenError);
+			return this._cleanup(initialTokenError);
 		}
-		const result: number | MolangExecFail = this.parseNullCoalesce();
+		const result: number | MolangExecFail = this._parseNullCoalesce();
 		if (this._isError(result)) {
-			return this.cleanup(result);
+			return this._cleanup(result);
 		}
 		if (this._getTokenType() !== MolangTokenType.EOF) {
-			return this.cleanup(this.createError(MolangErrorType.SyntaxError, "Unexpected token at end of script"));
+			return this._cleanup(this._createError(MolangErrorType.SyntaxError, "Unexpected token at end of script"));
 		}
 		const successResult: MolangExecSuccess = {
 			success: true,
 			value: result
 		};
-		this.cleanup(null);
+		this._cleanup(null);
 		return successResult;
 	}
 
@@ -49,7 +49,7 @@ export default class Molang {
 		return typeof result !== "number";
 	}
 
-	private static cleanup(result: MolangExecFail | null): MolangExecFail {
+	private static _cleanup(result: MolangExecFail | null): MolangExecFail {
 		this._script = "";
 		this._length = 0;
 		this._cursor = 0;
@@ -68,7 +68,7 @@ export default class Molang {
 		};
 	}
 
-	private static createError(type: MolangErrorType, errorMessage: string, position?: number): MolangExecFail {
+	private static _createError(type: MolangErrorType, errorMessage: string, position?: number): MolangExecFail {
 		return {
 			success: false,
 			errorType: type,
@@ -77,7 +77,7 @@ export default class Molang {
 		};
 	}
 
-	private static nextToken(): MolangExecFail | null {
+	private static _nextToken(): MolangExecFail | null {
 		while (this._cursor < this._length && isWhitespace(this._script[this._cursor])) {
 			this._cursor++;
 		}
@@ -114,7 +114,7 @@ export default class Molang {
 			this._readIdentifier();
 			return null;
 		}
-		return this.createError(MolangErrorType.SyntaxError, `Unexpected character: '${character}'`, this._cursor);
+		return this._createError(MolangErrorType.SyntaxError, `Unexpected character: '${character}'`, this._cursor);
 	}
 
 	private static _readNumber(): void {
@@ -164,7 +164,7 @@ export default class Molang {
 		}
 		while (shouldContinue(this._currentTokenType)) {
 			const operatorType: MolangTokenType = this._currentTokenType;
-			const operatorError: MolangExecFail | null = this.nextToken();
+			const operatorError: MolangExecFail | null = this._nextToken();
 			if (operatorError) {
 				return operatorError;
 			}
@@ -177,29 +177,29 @@ export default class Molang {
 		return leftValue;
 	}
 
-	private static parsePrimary(): number | MolangExecFail {
+	private static _parsePrimary(): number | MolangExecFail {
 		const currentPosition: number = this._tokenPosition;
 		if (this._currentTokenType === MolangTokenType.Number) {
 			const value: number = parseFloat(this._currentTokenValue);
-			const tokenError: MolangExecFail | null = this.nextToken();
+			const tokenError: MolangExecFail | null = this._nextToken();
 			if (tokenError) {
 				return tokenError;
 			}
 			return value;
 		}
 		if (this._currentTokenType === MolangTokenType.OpenParen) {
-			const openParenError: MolangExecFail | null = this.nextToken();
+			const openParenError: MolangExecFail | null = this._nextToken();
 			if (openParenError) {
 				return openParenError;
 			}
-			const result: number | MolangExecFail = this.parseNullCoalesce();
+			const result: number | MolangExecFail = this._parseNullCoalesce();
 			if (this._isError(result)) {
 				return result;
 			}
 			if (this._getTokenType() !== MolangTokenType.CloseParen) {
-				return this.createError(MolangErrorType.MismatchedParentheses, "Missing ')'", currentPosition);
+				return this._createError(MolangErrorType.MismatchedParentheses, "Missing ')'", currentPosition);
 			}
-			const closeParenError: MolangExecFail | null = this.nextToken();
+			const closeParenError: MolangExecFail | null = this._nextToken();
 			if (closeParenError) {
 				return closeParenError;
 			}
@@ -211,49 +211,49 @@ export default class Molang {
 				const functionEntry: [number, (...args: number[]) => number] = MathRegistry[identifier];
 				return this._parseFunctionCall(identifier, functionEntry[0], functionEntry[1]);
 			} else if (identifier.startsWith("math.")) {
-				return this.createError(MolangErrorType.UnknownFunction, `Unknown function: ${identifier}`, currentPosition);
+				return this._createError(MolangErrorType.UnknownFunction, `Unknown function: ${identifier}`, currentPosition);
 			} else {
 				if (this._variables === null || !this._variables.has(identifier)) {
-					return this.createError(MolangErrorType.UnknownVariable, `Variable not found: ${identifier}`, currentPosition);
+					return this._createError(MolangErrorType.UnknownVariable, `Variable not found: ${identifier}`, currentPosition);
 				}
 				const variableProvider: (() => number) | undefined = this._variables.get(identifier);
 				if (variableProvider === undefined) {
-					return this.createError(MolangErrorType.UnknownVariable, `Variable not found: ${identifier}`, currentPosition);
+					return this._createError(MolangErrorType.UnknownVariable, `Variable not found: ${identifier}`, currentPosition);
 				}
-				const variableTokenError: MolangExecFail | null = this.nextToken();
+				const variableTokenError: MolangExecFail | null = this._nextToken();
 				if (variableTokenError) {
 					return variableTokenError;
 				}
 				return variableProvider();
 			}
 		}
-		return this.createError(MolangErrorType.SyntaxError, `Unexpected token: ${this._currentTokenValue}`, currentPosition);
+		return this._createError(MolangErrorType.SyntaxError, `Unexpected token: ${this._currentTokenValue}`, currentPosition);
 	}
 
 	private static _parseFunctionCall(identifier: string, argumentCount: number, implementation: (...args: number[]) => number): number | MolangExecFail {
 		const currentPosition: number = this._tokenPosition;
-		const functionTokenError: MolangExecFail | null = this.nextToken();
+		const functionTokenError: MolangExecFail | null = this._nextToken();
 		if (functionTokenError) {
 			return functionTokenError;
 		}
 		const argumentsList: number[] = [];
 		if (this._getTokenType() === MolangTokenType.OpenParen) {
-			const argsOpenParenError: MolangExecFail | null = this.nextToken();
+			const argsOpenParenError: MolangExecFail | null = this._nextToken();
 			if (argsOpenParenError) {
 				return argsOpenParenError;
 			}
 			if (this._getTokenType() !== MolangTokenType.CloseParen) {
-				const firstArg: number | MolangExecFail = this.parseNullCoalesce();
+				const firstArg: number | MolangExecFail = this._parseNullCoalesce();
 				if (this._isError(firstArg)) {
 					return firstArg;
 				}
 				argumentsList.push(firstArg);
 				while (this._getTokenType() === MolangTokenType.Comma) {
-					const commaError: MolangExecFail | null = this.nextToken();
+					const commaError: MolangExecFail | null = this._nextToken();
 					if (commaError) {
 						return commaError;
 					}
-					const nextArg: number | MolangExecFail = this.parseNullCoalesce();
+					const nextArg: number | MolangExecFail = this._parseNullCoalesce();
 					if (this._isError(nextArg)) {
 						return nextArg;
 					}
@@ -261,48 +261,48 @@ export default class Molang {
 				}
 			}
 			if (this._getTokenType() !== MolangTokenType.CloseParen) {
-				return this.createError(MolangErrorType.MismatchedParentheses, "Expected ')'", currentPosition);
+				return this._createError(MolangErrorType.MismatchedParentheses, "Expected ')'", currentPosition);
 			}
-			const argsCloseParenError: MolangExecFail | null = this.nextToken();
+			const argsCloseParenError: MolangExecFail | null = this._nextToken();
 			if (argsCloseParenError) {
 				return argsCloseParenError;
 			}
 		}
 		if (argumentsList.length !== argumentCount) {
-			return this.createError(MolangErrorType.InvallidParameters, `${identifier} expects ${argumentCount} args, got ${argumentsList.length}`, currentPosition);
+			return this._createError(MolangErrorType.InvallidParameters, `${identifier} expects ${argumentCount} args, got ${argumentsList.length}`, currentPosition);
 		}
 		return implementation(...argumentsList);
 	}
 
-	private static parseUnary(): number | MolangExecFail {
+	private static _parseUnary(): number | MolangExecFail {
 		if (this._currentTokenType === MolangTokenType.Not) {
-			const notTokenError: MolangExecFail | null = this.nextToken();
+			const notTokenError: MolangExecFail | null = this._nextToken();
 			if (notTokenError) {
 				return notTokenError;
 			}
-			const value: number | MolangExecFail = this.parseUnary();
+			const value: number | MolangExecFail = this._parseUnary();
 			if (this._isError(value)) {
 				return value;
 			}
 			return value === 0 ? 1 : 0;
 		}
 		if (this._currentTokenType === MolangTokenType.Minus) {
-			const minusTokenError: MolangExecFail | null = this.nextToken();
+			const minusTokenError: MolangExecFail | null = this._nextToken();
 			if (minusTokenError) {
 				return minusTokenError;
 			}
-			const value: number | MolangExecFail = this.parseUnary();
+			const value: number | MolangExecFail = this._parseUnary();
 			if (this._isError(value)) {
 				return value;
 			}
 			return -value;
 		}
-		return this.parsePrimary();
+		return this._parsePrimary();
 	}
 
-	private static parseMultiplication(): number | MolangExecFail {
+	private static _parseMultiplication(): number | MolangExecFail {
 		return this._parseBinary(
-			this.parseUnary,
+			this._parseUnary,
 			t => t === MolangTokenType.Multiply || t === MolangTokenType.Divide || t === MolangTokenType.Modulo,
 			(left, right, op) => {
 				if (op === MolangTokenType.Multiply) return left * right;
@@ -312,17 +312,17 @@ export default class Molang {
 		);
 	}
 
-	private static parseAddition(): number | MolangExecFail {
+	private static _parseAddition(): number | MolangExecFail {
 		return this._parseBinary(
-			this.parseMultiplication,
+			this._parseMultiplication,
 			t => t === MolangTokenType.Plus || t === MolangTokenType.Minus,
 			(left, right, op) => op === MolangTokenType.Plus ? left + right : left - right
 		);
 	}
 
-	private static parseComparison(): number | MolangExecFail {
+	private static _parseComparison(): number | MolangExecFail {
 		return this._parseBinary(
-			this.parseAddition,
+			this._parseAddition,
 			t => t === MolangTokenType.Less || t === MolangTokenType.LessOrEqual || t === MolangTokenType.Greater || t === MolangTokenType.GreaterOrEqual,
 			(left, right, op) => {
 				switch (op) {
@@ -336,44 +336,44 @@ export default class Molang {
 		);
 	}
 
-	private static parseEquality(): number | MolangExecFail {
+	private static _parseEquality(): number | MolangExecFail {
 		return this._parseBinary(
-			this.parseComparison,
+			this._parseComparison,
 			t => t === MolangTokenType.Equal || t === MolangTokenType.NotEqual,
 			(left, right, op) => op === MolangTokenType.Equal ? (left === right ? 1 : 0) : (left !== right ? 1 : 0)
 		);
 	}
 
-	private static parseLogical(): number | MolangExecFail {
+	private static _parseLogical(): number | MolangExecFail {
 		return this._parseBinary(
-			this.parseEquality,
+			this._parseEquality,
 			t => t === MolangTokenType.And || t === MolangTokenType.Or,
 			(left, right, op) => op === MolangTokenType.And ? (left !== 0 && right !== 0 ? 1 : 0) : (left !== 0 || right !== 0 ? 1 : 0)
 		);
 	}
 
-	private static parseTernary(): number | MolangExecFail {
-		const conditionValue: number | MolangExecFail = this.parseLogical();
+	private static _parseTernary(): number | MolangExecFail {
+		const conditionValue: number | MolangExecFail = this._parseLogical();
 		if (this._isError(conditionValue)) {
 			return conditionValue;
 		}
 		if (this._currentTokenType === MolangTokenType.Question) {
-			const questionTokenError: MolangExecFail | null = this.nextToken();
+			const questionTokenError: MolangExecFail | null = this._nextToken();
 			if (questionTokenError) {
 				return questionTokenError;
 			}
-			const leftValue: number | MolangExecFail = this.parseTernary();
+			const leftValue: number | MolangExecFail = this._parseTernary();
 			if (this._isError(leftValue)) {
 				return leftValue;
 			}
 			if (this._getTokenType() !== MolangTokenType.Colon) {
-				return this.createError(MolangErrorType.SyntaxError, "Ternary missing ':'");
+				return this._createError(MolangErrorType.SyntaxError, "Ternary missing ':'");
 			}
-			const colonTokenError: MolangExecFail | null = this.nextToken();
+			const colonTokenError: MolangExecFail | null = this._nextToken();
 			if (colonTokenError) {
 				return colonTokenError;
 			}
-			const rightValue: number | MolangExecFail = this.parseTernary();
+			const rightValue: number | MolangExecFail = this._parseTernary();
 			if (this._isError(rightValue)) {
 				return rightValue;
 			}
@@ -382,9 +382,9 @@ export default class Molang {
 		return conditionValue;
 	}
 
-	private static parseNullCoalesce(): number | MolangExecFail {
+	private static _parseNullCoalesce(): number | MolangExecFail {
 		return this._parseBinary(
-			this.parseTernary,
+			this._parseTernary,
 			t => t === MolangTokenType.NullCoalesce,
 			(left, right) => (left !== null && !isNaN(left)) ? left : right
 		);
