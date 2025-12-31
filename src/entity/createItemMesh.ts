@@ -1,6 +1,7 @@
-import { BufferGeometry, Color, DoubleSide, Float32BufferAttribute, Mesh, MeshStandardMaterial } from "three";
+import { BufferGeometry, Color, DoubleSide, Float32BufferAttribute, Mesh, MeshBasicMaterial } from "three";
 import { FACE } from "../constants";
 import { loadImage } from "../util/loadImage";
+import { applyMinecraftShader } from "../viewport/applyMinecraftShading";
 
 const cachedColor = new Color();
 export async function createItemMesh(imageURL: string, pixelSize: number = 1 / 16, depth: number = 1 / 16, alphaThreshold: number = 10): Promise<Mesh> {
@@ -79,10 +80,8 @@ export async function createItemMesh(imageURL: string, pixelSize: number = 1 / 1
 		-((height / 2) - 0.5) * pixelSize,
 		0
 	);
-	return new Mesh(geometry, new MeshStandardMaterial({
+	return new Mesh(geometry, applyMinecraftShader(new MeshBasicMaterial({
 		vertexColors: true,
-		roughness: 0,
-		metalness: 0,
 		side: DoubleSide
-	}));
+	})));
 }

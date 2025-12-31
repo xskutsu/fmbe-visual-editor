@@ -1,4 +1,5 @@
-import { BoxGeometry, Material, Mesh, MeshStandardMaterial, NearestFilter, SRGBColorSpace, Texture } from "three";
+import { BoxGeometry, Material, Mesh, MeshBasicMaterial, NearestFilter, SRGBColorSpace, Texture } from "three";
+import { applyMinecraftShader } from "../viewport/applyMinecraftShading";
 import { EntityTexture } from "./types";
 
 export function createBlockMesh(et: EntityTexture): Mesh {
@@ -8,11 +9,9 @@ export function createBlockMesh(et: EntityTexture): Mesh {
 		texture.magFilter = NearestFilter;
 		texture.minFilter = NearestFilter;
 		texture.colorSpace = SRGBColorSpace;
-		materials.push(new MeshStandardMaterial({
-			map: texture,
-			roughness: 0,
-			metalness: 0
-		}));
+		materials.push(applyMinecraftShader(new MeshBasicMaterial({
+			map: texture
+		})));
 	}
 	return new Mesh(new BoxGeometry(1, 1, 1), materials);
 }
