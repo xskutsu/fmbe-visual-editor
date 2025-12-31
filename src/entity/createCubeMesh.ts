@@ -10,7 +10,8 @@ export function createBlockMesh(et: EntityTexture): Mesh {
 		texture.minFilter = NearestFilter;
 		texture.colorSpace = SRGBColorSpace;
 		materials.push(applyMinecraftShader(new MeshBasicMaterial({
-			map: texture
+			map: texture,
+			transparent: true
 		})));
 	}
 	return new Mesh(new BoxGeometry(1, 1, 1), materials);
