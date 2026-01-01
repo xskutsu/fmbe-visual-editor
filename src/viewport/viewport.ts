@@ -8,7 +8,7 @@ renderer.shadowMap.enabled = true;
 renderer.outputColorSpace = SRGBColorSpace;
 
 export const scene: Scene = new Scene();
-scene.background = new Color(0x222222);
+scene.background = new Color(0x111115);
 
 export const camera: PerspectiveCamera = new PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 2000);
 
