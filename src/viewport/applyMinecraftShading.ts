@@ -23,8 +23,8 @@ vec3 N = normalize(vMcWorldNormal);
 float nx2 = N.x * N.x;
 float ny2 = N.y * N.y;
 float nz2 = N.z * N.z;
-float yBrightness = (N.y > 0.0) ? 1.0 : 0.5;
-float mcLightLevel = (nx2 * 0.6) + (nz2 * 0.8) + (ny2 * yBrightness);
+float yBrightness = (N.y > 0.0) ? 0.988 : 0.5;
+float mcLightLevel = (nx2 * 0.62) + (nz2 * 0.82) + (ny2 * yBrightness);
 gl_FragColor.rgb *= mcLightLevel;`;
 
 export function applyMinecraftShader<T extends Material>(material: T): T {
