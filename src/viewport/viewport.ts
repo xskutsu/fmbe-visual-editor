@@ -20,7 +20,7 @@ window.addEventListener("resize", function (): void {
 	renderer.setSize(innerWidth, innerHeight);
 }, false);
 
-export const orbit: OrbitCameraControl = new OrbitCameraControl(camera, 8, 0.0075, renderer.domElement);
+export const orbit: OrbitCameraControl = new OrbitCameraControl(camera, 8, 1.1, renderer.domElement);
 
 const gridHelper1 = new GridHelper(3, 3, 0x444444, 0x444444);
 gridHelper1.position.y -= 0.5;

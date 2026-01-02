@@ -61,13 +61,12 @@ export default class OrbitCameraControl {
 	}
 
 	private _wheelEvent(deltaY: number): void {
-		const factor = 1.1;
-		const direction = Math.sign(deltaY);
-		if (direction > 0) {
-			this.position.x *= factor;
-		} else {
-			this.position.x /= factor;
+		let x = this.position.x * (deltaY > 0 ? this.zoomSpeed : 1 / this.zoomSpeed);
+		if (x > 50) {
+			x = 50;
+		} else if (x < 1) {
+			x = 1;
 		}
-		this.position.x = Math.max(1, Math.min(50, this.position.x));
+		this.position.x = x;
 	}
 }
