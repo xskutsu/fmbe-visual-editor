@@ -1,4 +1,5 @@
 import { PerspectiveCamera, type Scene, SRGBColorSpace, WebGLRenderer } from "three";
+import { clamp } from "../../util/clamp";
 
 export class Viewport {
 	public container: HTMLElement;
@@ -23,7 +24,7 @@ export class Viewport {
 		this.observer.observe(this.container);
 		this.onresize = null;
 		const rect: DOMRect = this.container.getBoundingClientRect();
-		this._updateDimensions(rect.width, rect.height, Math.min(devicePixelRatio, 2));
+		this._updateDimensions(rect.width, rect.height, devicePixelRatio);
 	}
 
 	public dispose(): void {
@@ -43,11 +44,11 @@ export class Viewport {
 		const entry: ResizeObserverEntry = entries[0];
 		const width: number = entry.contentRect.width;
 		const height: number = entry.contentRect.height;
-		this._updateDimensions(width, height, Math.min(devicePixelRatio, 2));
+		this._updateDimensions(width, height, devicePixelRatio);
 	}
 
 	private _updateDimensions(width: number, height: number, dpr: number): void {
-		this.renderer.setPixelRatio(dpr);
+		this.renderer.setPixelRatio(clamp(dpr, 0.5, 8));
 		this.renderer.setSize(width, height, false);
 		this.camera.aspect = width / height;
 		this.camera.updateProjectionMatrix();

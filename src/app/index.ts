@@ -16,5 +16,4 @@ function animateFrame(): void {
 	requestAnimationFrame(animateFrame);
 }
 
-document.body.appendChild(viewport.renderer.domElement);
 animateFrame();
