@@ -1,4 +1,5 @@
 import { DEG_TO_RAD, RAD_TO_DEG } from "../constants";
+import { clamp } from "../util/clamp";
 import type { MolangMathFunc } from "./types";
 
 export const MathImpl: Record<string, MolangMathFunc> = {
@@ -8,7 +9,7 @@ export const MathImpl: Record<string, MolangMathFunc> = {
 	"math.atan": (x) => Math.atan(x) * RAD_TO_DEG,
 	"math.atan2": (y, x) => Math.atan2(y, x) * RAD_TO_DEG,
 	"math.ceil": Math.ceil,
-	"math.clamp": (v, min, max) => Math.min(Math.max(v, min), max),
+	"math.clamp": clamp,
 	"math.cos": (x) => Math.cos(x * DEG_TO_RAD),
 	"math.cos01": (x) => (Math.cos(x * DEG_TO_RAD) + 1) / 2,
 	"math.exp": Math.exp,
