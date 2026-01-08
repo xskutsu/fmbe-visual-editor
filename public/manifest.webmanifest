@@ -1,6 +1,6 @@
 {
-	"name": "FMBE Visual Editor",
-	"short_name": "FMBE Visual Editor",
+	"name": "FMBE Designer",
+	"short_name": "FMBE Designer",
 	"start_url": "/",
 	"display": "standalone",
 	"orientation": "landscape",

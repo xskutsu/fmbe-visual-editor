@@ -1,5 +1,5 @@
 {
-	"author": "xskutsu <xskt@protonmail.com>",
+	"author": "xskutsu",
 	"description": "A visual real-time editor for the FMBE technique",
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.10",
@@ -16,10 +16,10 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/xskutsu/fmbe-editor.git"
+		"url": "https://github.com/xskutsu/fmbe-designer.git"
 	},
 	"license": "AGPL-3.0-or-later",
-	"name": "fmbe-editor",
+	"name": "fmbe-designer",
 	"packageManager": "pnpm@10.8.0",
 	"private": false,
 	"scripts": {
