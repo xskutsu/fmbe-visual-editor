@@ -1,25 +1,25 @@
 import type { FMBEData, FMBEValue } from "./types";
 
-export function getSituateCommand(fmbe: FMBEData, selector: string): string {
+export function getSituateCommand(fmbeData: FMBEData, selector: string): string {
 	let molang: string = "";
 	const pinn = (key: string, value: FMBEValue): void => {
 		if (value !== null) {
 			molang += `${key}=${value};`;
 		}
 	};
-	pinn("v.xpos", fmbe.position.x);
-	pinn("v.ypos", fmbe.position.y);
-	pinn("v.zpos", fmbe.position.z);
-	pinn("v.xrot", fmbe.rotation.x);
-	pinn("v.yrot", fmbe.rotation.y);
-	pinn("v.zrot", fmbe.rotation.z);
-	pinn("v.xbasepos", fmbe.basePosition.x);
-	pinn("v.ybasepos", fmbe.basePosition.y);
-	pinn("v.zbasepos", fmbe.basePosition.z);
-	pinn("v.scale", fmbe.scale);
-	pinn("v.extend_scale", fmbe.extend.scale);
-	pinn("v.extend_xrot", fmbe.extend.rotation.x);
-	pinn("v.extend_yrot", fmbe.extend.rotation.y);
+	pinn("v.xpos", fmbeData.position.x);
+	pinn("v.ypos", fmbeData.position.y);
+	pinn("v.zpos", fmbeData.position.z);
+	pinn("v.xrot", fmbeData.rotation.x);
+	pinn("v.yrot", fmbeData.rotation.y);
+	pinn("v.zrot", fmbeData.rotation.z);
+	pinn("v.xbasepos", fmbeData.basePosition.x);
+	pinn("v.ybasepos", fmbeData.basePosition.y);
+	pinn("v.zbasepos", fmbeData.basePosition.z);
+	pinn("v.scale", fmbeData.scale);
+	pinn("v.extend_scale", fmbeData.extend.scale);
+	pinn("v.extend_xrot", fmbeData.extend.rotation.x);
+	pinn("v.extend_yrot", fmbeData.extend.rotation.y);
 	return [
 		"playanimation",
 		selector,
