@@ -18,10 +18,12 @@ export class Editor {
 	}
 
 	public addEntity(entity: Entity) {
-		this.entities.delete(entity.uuid);
+		this.entities.set(entity.uuid, entity);
+		this.scene.add(entity.mesh);
 	}
 
 	public deleteEntity(entity: Entity, dispose: boolean = true): void {
+		this.scene.remove(entity.mesh);
 		this.entities.delete(entity.uuid);
 		if (dispose) {
 			entity.dispose();
