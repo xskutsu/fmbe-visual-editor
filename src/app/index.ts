@@ -1,6 +1,10 @@
+import { TextureLoader } from "three";
+import { FMBEType } from "./fmbe/types";
 import { OrbitCameraControl } from "./input/orbitCameraControl";
 import { Editor } from "./live/editor";
+import { Entity } from "./live/entity";
 import type { MolangVariableMap } from "./molang/types";
+import { createBlockMesh } from "./render/mesh/createBlockMesh";
 import { Viewport } from "./render/view/viewport";
 
 const editor: Editor = new Editor();
@@ -27,3 +31,46 @@ function animateFrame(): void {
 }
 
 animateFrame();
+
+const loader = new TextureLoader();
+
+editor.addEntity(
+	new Entity(
+		createBlockMesh({
+			down: loader.load("assets/texture/block/debug_down.png"),
+			east: loader.load("assets/texture/block/debug_east.png"),
+			north: loader.load("assets/texture/block/debug_north.png"),
+			south: loader.load("assets/texture/block/debug_south.png"),
+			up: loader.load("assets/texture/block/debug_up.png"),
+			west: loader.load("assets/texture/block/debug_west.png")
+		}),
+		{
+			type: FMBEType.block3D,
+			data: {
+				position: {
+					x: null,
+					y: null,
+					z: null
+				},
+				basePosition: {
+					x: null,
+					y: null,
+					z: null
+				},
+				rotation: {
+					x: null,
+					y: null,
+					z: null
+				},
+				scale: null,
+				extend: {
+					rotation: {
+						x: null,
+						y: null
+					},
+					scale: null
+				}
+			}
+		}
+	)
+);
