@@ -12,6 +12,7 @@ export class Entity {
 	constructor(mesh: Mesh, fmbe: FMBE) {
 		this.uuid = generateUUID();
 		this.mesh = mesh;
+		this.mesh.matrixAutoUpdate = false;
 		this.fmbe = fmbe;
 	}
 
