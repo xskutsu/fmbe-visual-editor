@@ -26,8 +26,8 @@
 		"build": "node scripts/esbuild.mjs",
 		"check": "tsc -p src/tsconfig.json --noEmit",
 		"clean": "node scripts/clean.mjs",
-		"lint": "biome check .",
-		"lint:fix": "biome check --write .",
+		"lint": "pnpm exec biome check .",
+		"lint:fix": "pnpm exec biome check --write .",
 		"serve": "node scripts/serve.mjs",
 		"watch": "node scripts/esbuild.mjs --watch"
 	},
